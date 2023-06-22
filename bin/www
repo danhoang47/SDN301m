@@ -6,27 +6,32 @@
 
 var app = require('../app');
 var debug = require('debug')('express-generator:server');
-var http = require('http');
+var https = require('https');
+const fs = require("fs");
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '443');
 app.set('port', port);
+const options = {
+    key: fs.readFileSync(`D:\\FPT\\SU23\\SDN301M\\conFusion\\private.key`), 
+    cert: fs.readFileSync(`D:\\FPT\\SU23\\SDN301M\\conFusion\\certificate.pem`)
+}
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 app.listen(port, 'localhost', () => {
     console.log(
-        `Server running at http://localhost:${port}`
+        `Server running at https://localhost:${port}`
     );
 });
 server.on('error', onError);

@@ -4,7 +4,9 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 var passport = require("passport");
-var authenticate = require("./service/authenticate");
+const uploadRouter = require('./routes/uploadRouter');
+const multer = require("multer");
+
 const tutorialRouter = require("./routes/tutprialRouter");
 const usersRouter = require("./routes/user");
 // const auth = require("./service/auth");
@@ -50,6 +52,7 @@ connect.then(
 // app.use('/', indexRouter);
 app.use("/tutorials", tutorialRouter);
 app.use("/users", usersRouter);
+app.use('/imageUpload',uploadRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

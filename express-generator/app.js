@@ -4,8 +4,12 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const session = require("express-session");
+const FileStore = require("session-file-store")(session);
+const passport = require("passport");
+const config = require("./config")
 
-const url = "mongodb://127.0.0.1:27017/conFusion";
+const url = config.mongoUrl;
 const connect = mongoose.connect(url);
 
 connect.then(
@@ -13,8 +17,8 @@ connect.then(
 		console.log("Connected correctly to server");
 	},
 	(err) => {
-    console.log(err)
-  }
+		console.log(err);
+	}
 );
 
 const indexRouter = require("./routes/index");
@@ -32,8 +36,19 @@ app.set("view engine", "jade");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser("12345-67890"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+	session({
+		name: "session-id",
+		secret: "12345-67890-09876-54321",
+		saveUninitialized: false,
+		resave: false,
+		store: new FileStore(),
+	})
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

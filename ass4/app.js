@@ -1,20 +1,19 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var dishRouter = require("./routes/dishesRouter");
-var promoRouter = require("./routes/promoRouter");
-var leaderRouter = require("./routes/leaderRouter");
-var userRouter = require("./routes/userRouter");
-var favoritesRouter = require("./routes/favoritesRouter");
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const dishRouter = require("./routes/dishesRouter");
+const promoRouter = require("./routes/promoRouter");
+const leaderRouter = require("./routes/leaderRouter");
+const userRouter = require("./routes/userRouter");
 const passport = require("passport");
 const mongoose = require("mongoose");
 const authenticate = require("./authenticate");
-var config = require("./config");
+const config = require("./config");
 
-var session = require("express-session");
-var FileStore = require("session-file-store")(session);
+const session = require("express-session");
+const FileStore = require("session-file-store")(session);
 
 const url = config.mongoUrl;
 const connect = mongoose.connect(url);
@@ -28,7 +27,7 @@ connect.then(
   }
 );
 
-var app = express();
+const app = express();
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
@@ -37,7 +36,7 @@ app.use(
     secret: "12345-67890-09876-54321",
     saveUninitialized: false,
     resave: false,
-    store: new FileStore({ logFn: function () {} }),
+    store: new FileStore(),
   })
 );
 
@@ -59,7 +58,6 @@ app.use("/dishes", dishRouter);
 app.use("/promotions", promoRouter);
 app.use("/leaders", leaderRouter);
 app.use("/users", userRouter);
-app.use("/favorites", favoritesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
